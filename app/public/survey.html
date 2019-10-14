@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Survey</title>
+
+    <!-- Latest compiled and minified CSS & JS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- <link rel="stylesheet" href="assets/css/style.css"> -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <!-- <link href="https://fonts.googleapis.com/css?family=Lexend+Deca&display=swap" rel="stylesheet"> -->
+
+</head>
+
+<body>
+    <div class="container">
+
+        <h1 class="mt-3"> Survey Questions</h1>
+
+        <hr width="100%">
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Modal Header</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p id="friendName">Some text in the modal.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <form>
+            <h3>About you</h3>
+            <h5 class="question">Name (required)</h5>
+            <input id="name" type="text"><br></br>
+
+            <h5 class="question">Link to Photo Image (required)</h5>
+            <input type="url" name="pic">
+
+            <hr width="100%">
+            <h5 id="q1" class="question"></h5>
+
+            <h5 id="q2" class="question"></h5>
+
+            <h5 id="q3" class="question"></h5>
+
+            <h5 id="q4" class="question"></h5>
+
+            <h5 id="q5" class="question"></h5>
+
+            <h5 id="q6" class="question"></h5>
+
+            <h5 id="q7" class="question"></h5>
+
+            <h5 id="q8" class="question"></h5>
+
+            <h5 id="q9" class="question"></h5>
+
+            <h5 id="q10" class="question"></h5>
+
+            <button type="submit" id="sub-btn" class="btn btn-lg btn-dark" data-toggle="modal" data-target="#myModal">
+                Submit </button>
+
+        </form>
+
+    </div>
+
+    <script type="text/javascript">
+        var questions = [
+            {
+                question: "Pizza should always have pineapple on it.",
+                name: "q1"
+            },
+            {
+                question: "Top sheets are unnecessary and a waste of the water needed to wash them.",
+                name: "q2"
+            },
+            {
+                question: "The best and only way to use your iPhone alarm is to have an alarm set for every possible time.",
+                name: "q3"
+            },
+            {
+                question: "Phone calls are more efficient than texting.",
+                name: "q4"
+            },
+            {
+                question: "The earth is flat.",
+                name: "q5"
+            },
+            {
+                question: "Vaccinations should be banned.",
+                name: "q6"
+            },
+            {
+                question: "Straws are fine.",
+                name: "q7"
+            },
+            {
+                question: "Boneless wings are the superior wing.",
+                name: "q8"
+            },
+            {
+                question: "There should be similar limitations to the places kids can go as there are for dogs.",
+                name: "q9"
+            },
+            {
+                question: "Steak should be fully cooked.",
+                name: "q10"
+            }
+        ];
+        function populate() {
+            for (i in questions) {
+                var question = questions[i].question;
+                var currentQuestionNumber = (parseInt(i) + parseInt(1))
+                $("#q" + currentQuestionNumber).append(question);
+                var inp = '<select name="q" id="a' + currentQuestionNumber + '">'
+                inp += '<option value="-">Select an Option</option>'
+                inp += '<option value="1">1 (Strongly Disagree)</option>'
+                inp += '<option value="2">2</option>'
+                inp += '<option value="3">3</option>'
+                inp += '<option value="4">4</option>'
+                inp += '<option value="5">5 (Strongly Agree</option>'
+                inp += '</select><br></br>'
+                $("#q" + currentQuestionNumber).after(inp);
+            };
+        };
+        populate();
+        $("#sub-btn").on("click", function (event) {
+            event.preventDefault();
+            var newResult = {
+                name: $("#name").val(),
+                photo: $("#photo").val(),
+                scores: [
+                    +$("#a1").val(),
+                    +$("#a2").val(),
+                    +$("#a3").val(),
+                    +$("#a4").val(),
+                    +$("#a5").val(),
+                    +$("#a6").val(),
+                    +$("#a7").val(),
+                    +$("#a8").val(),
+                    +$("#a9").val(),
+                    +$("#a10").val()
+                ]
+            };
+            console.log(newResult);
+            // console.log(ideal);
+            $.post("/api/friends", newResult, function (data) {
+                    console.log(data)
+                    $(".modal-title").text(data.friend);
+                    var im = '<img width="400px" src="' + data.photo + '" alt="friend">'
+                    console.log(im);
+                    $(".modal-body").html($(im));
+                    console.log("hi")
+                });
+        })
+    </script>
+</body>
+
+</html>
